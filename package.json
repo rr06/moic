@@ -1,0 +1,23 @@
+{
+  "name": "moic",
+  "version": "1.0.0",
+  "description": "Micro Organism Image Classifer experiment",
+  "main": "moic_classifier.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rr06/moic.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rr06/moic/issues"
+  },
+  "homepage": "https://github.com/rr06/moic#readme",
+  "dependencies": {
+    "@tensorflow-models/mobilenet": "^2.0.4",
+    "@tensorflow/tfjs-node": "^2.3.0"
+  }
+}
