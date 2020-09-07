@@ -18,12 +18,21 @@ const PHASE_TRAIN = "TRAIN"
 const PHASE_CLASSIFY = "CLASSIFY"
 
 /*
- * Step: Define some helpful functions to elimnate duplicate code 
- */
+* Step: Define some helpful functions to elimnate duplicate code 
+*/
 const readImage = path => {
     const imageBuffer = fs.readFileSync(path)
     const tfimage = tf.node.decodeImage(imageBuffer)
     return tfimage;
+}
+
+const printReportFor = (c, results) => {
+    const m = results.matches
+    const num_classified = m.length
+    const avg_confidence = (num_classified > 0) ?
+        m.reduce((start, i) => {return start + i.confidences[c]}, 0) / num_classified :
+        0
+    console.log(`${c} => ${results.training_images} training images => ${num_classified} [${avg_confidence * 100}% confident]`)
 }
 
 /*
@@ -88,22 +97,13 @@ async function moic() {
         }
         console.timeEnd(PHASE_CLASSIFY)
 
-
         /*
          * Step: Report the results
          */
         console.log(`Classification summary`)
-        CLASSIFICATIONS.forEach(c => {
-
-            const classification = classification_results[c]
-            const num_classified = classification.matches.length
-            const avg_confidence = (num_classified > 0) ?
-                classification.matches.reduce((start, i) => {
-                    return start + i.confidences[c]
-                }, 0) / num_classified :
-                0
-            console.log(`${c} => ${classification.training_images} training images => ${num_classified} [${avg_confidence * 100}% confident]`)
-        })
+        for(const c of CLASSIFICATIONS) {
+            printReportFor(c, classification_results[c])
+        }
 
     } catch (err) {
         console.error(err)
