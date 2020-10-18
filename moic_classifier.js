@@ -87,6 +87,7 @@ async function moic() {
                 const prediction = await classifier.predictClass(
                     model.infer(readImage(path.join(DIR_RAW_DATA_SET, i)))
                 )
+                console.log(`${i}\t${prediction.label}\t${JSON.stringify(prediction.confidences)}`)
                 classification_results[prediction.label].matches.push({
                     "image": i,
                     "confidences": prediction.confidences
