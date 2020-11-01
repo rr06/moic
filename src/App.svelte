@@ -26,9 +26,7 @@
       {/each}
     </div>
   {:else}
-    <div class="notification is-info">
-      <ResultsFileLoader on:loaded={resultsLoaded} />
-    </div>
+    <ResultsFileLoader on:loaded={resultsLoaded} />
   {/if}
 </section>
 
