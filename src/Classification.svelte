@@ -1,7 +1,13 @@
 <script>
   import Match from "./Match.svelte";
+
   export let name;
   export let matches = [];
+
+  let excludeFullConfidence = false;
+
+  $: uncertainMatches = matches.filter((m) => m.confidences[name] < 1);
+  $: matchesList = excludeFullConfidence ? uncertainMatches : matches;
 </script>
 
 <style>
@@ -12,13 +18,19 @@
 </style>
 
 <div class="box">
-  <p class="title has-text-centered">
-    {name}
-    <span class="tag is-primary">{matches.length}</span>
+  <p class="has-text-centered">
+    <span class="title">{name}</span>
+    <span class="tag is-info">{matches.length}</span>
+    <span class="tag is-warning">{uncertainMatches.length}</span>
+    <br/>
+    <label class="checkbox">
+      <input type="checkbox" bind:checked={excludeFullConfidence} />
+      exclude full confidences
+    </label>
   </p>
   <div class="match-list">
-    {#each matches as m}
-      <Match match={m} />
+    {#each matchesList as m}
+        <Match match={m} />
     {/each}
   </div>
 </div>

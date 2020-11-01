@@ -14,6 +14,16 @@
     <p class="navbar-item title">MOIC - Biofilm image classifier</p>
     <p class="navbar-item subtitle">{file}</p>
   </div>
+  <div class="navbar-menu">
+    <div class="navbar-end">
+      <p class="navbar-item">
+        <span class="tag is-info">matches</span>
+      </p>
+      <p class="navbar-item">
+        <span class="tag is-warning">uncertain matches</span>
+      </p>
+    </div>
+  </div>
 </nav>
 
 <section class="section">
