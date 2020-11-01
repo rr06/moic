@@ -31,6 +31,7 @@
     "@tensorflow-models/knn-classifier": "^1.2.2",
     "@tensorflow-models/mobilenet": "^2.0.4",
     "@tensorflow/tfjs-node": "^2.3.0",
+    "bulma": "^0.9.1",
     "sirv-cli": "^1.0.0"
   }
 }
