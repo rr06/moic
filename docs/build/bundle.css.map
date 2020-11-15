@@ -1,0 +1,12 @@
+{
+  "version": 3,
+  "file": "bundle.css",
+  "sources": [
+    "Classification.svelte"
+  ],
+  "sourcesContent": [
+    "<script>\n  import Match from \"./Match.svelte\";\n\n  export let name;\n  export let matches = [];\n\n  let excludeFullConfidence = false;\n\n  $: uncertainMatches = matches.filter((m) => m.confidences[name] < 1);\n  $: matchesList = excludeFullConfidence ? uncertainMatches : matches;\n</script>\n\n<style>\n  .match-list {\n    height: 800px;\n    overflow-y: auto;\n  }\n</style>\n\n<div class=\"box\">\n  <p class=\"has-text-centered\">\n    <span class=\"title\">{name}</span>\n    <span class=\"tag is-info\">{matches.length}</span>\n    <span class=\"tag is-warning\">{uncertainMatches.length}</span>\n    <br/>\n    <label class=\"checkbox\">\n      <input type=\"checkbox\" bind:checked={excludeFullConfidence} />\n      exclude full confidences\n    </label>\n  </p>\n  <div class=\"match-list\">\n    {#each matchesList as m}\n        <Match match={m} />\n    {/each}\n  </div>\n</div>\n"
+  ],
+  "names": [],
+  "mappings": "AAaE,WAAW,cAAC,CAAC,AACX,MAAM,CAAE,KAAK,CACb,UAAU,CAAE,IAAI,AAClB,CAAC"
+}
