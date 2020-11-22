@@ -28,15 +28,6 @@ const readImage = path => {
     return tfimage;
 }
 
-const printReportFor = (c, results) => {
-    const m = results.matches
-    const num_classified = m.length
-    const avg_confidence = (num_classified > 0) ?
-        m.reduce((start, i) => {return start + i.confidences[c]}, 0) / num_classified :
-        0
-    console.log(`${c} => ${results.training_images} training images => ${num_classified} [${avg_confidence * 100}% confident]`)
-}
-
 /*
  * Step: Define the main moic algorithm
  */
@@ -64,7 +55,7 @@ async function moic() {
         training_instructions.forEach(ti => {
             let c = ti["classification"]
             classification_results[c] = {
-                training_images: 0,
+                training_images: [],
                 matches: []
             }
             
@@ -74,7 +65,7 @@ async function moic() {
                     model.infer(readImage(imagePath)),
                     c
                 )
-                classification_results[c].training_images++
+                classification_results[c].training_images.push(f)
             })
         })
         console.timeEnd(PHASE_TRAIN)
@@ -91,7 +82,8 @@ async function moic() {
                 )
                 classification_results[prediction.label].matches.push({
                     "image": i,
-                    "confidences": prediction.confidences
+                    "confidences": prediction.confidences,
+                    "isTrainingImage": classification_results[prediction.label].training_images.includes(i)
                 })
             } catch (err) {
                 console.timeLog(PHASE_CLASSIFY, `Error classifying ${i}: ${err}`)
@@ -100,13 +92,9 @@ async function moic() {
         console.timeEnd(PHASE_CLASSIFY)
 
         /*
-         * Step: Report the results
+         * Step: Save the results
          */
-        console.log(`Classification summary`)
-        for(const c of CLASSIFICATIONS) {
-            printReportFor(c, classification_results[c])
-        }
-
+        console.log(`Writing classification results`)
         fs.writeFileSync(myArgs[2], JSON.stringify(classification_results))
 
     } catch (err) {
