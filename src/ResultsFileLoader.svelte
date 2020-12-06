@@ -5,7 +5,7 @@
 
   function openFile() {
     files[0].text().then((text) => {
-      dispatch("loaded", {
+      dispatch("resultsLoaded", {
         file: files[0].name,
         results: JSON.parse(text),
       });

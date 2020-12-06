@@ -1,10 +1,20 @@
 <script>
   import Classification from "./Classification.svelte";
   import ResultsFileLoader from "./ResultsFileLoader.svelte";
-  let file = "";
+  import ManifestLoader from "./ManifestLoader.svelte";
+  import Manifest from "./Manifest.svelte";
+
+  let manifestFile = "";
+  let manifest;
+  function manifestLoaded(event) {
+    manifestFile = event.detail.file;
+    manifest = event.detail.manifest;
+  }
+
+  let resultsFile = "";
   let results;
   function resultsLoaded(event) {
-    file = event.detail.file;
+    resultsFile = event.detail.file;
     results = event.detail.results;
   }
 </script>
@@ -12,13 +22,12 @@
 <nav class="navbar is-fixed-top">
   <div class="navbar-brand">
     <p class="navbar-item title">MOIC - Biofilm image classifier</p>
-    <p class="navbar-item subtitle">{file}</p>
+    <p class="navbar-item subtitle">{manifestFile}</p>
+    <p class="navbar-item subtitle">{resultsFile}</p>
   </div>
   <div class="navbar-menu">
     <div class="navbar-end">
-      <p class="navbar-item">
-        <span class="tag is-info">matches</span>
-      </p>
+      <p class="navbar-item"><span class="tag is-info">matches</span></p>
       <p class="navbar-item">
         <span class="tag is-warning">uncertain matches</span>
       </p>
@@ -27,6 +36,9 @@
 </nav>
 
 <section class="section">
+  {#if manifest}
+    <Manifest manifest={manifest} />
+  {/if}
   {#if results}
     <div class="columns">
       {#each Object.keys(results) as c}
@@ -35,9 +47,9 @@
         </div>
       {/each}
     </div>
-  {:else}
-    <ResultsFileLoader on:loaded={resultsLoaded} />
   {/if}
+  <ManifestLoader on:manifestLoaded={manifestLoaded} />
+  <ResultsFileLoader on:resultsLoaded={resultsLoaded} />
 </section>
 
 <footer class="footer">
