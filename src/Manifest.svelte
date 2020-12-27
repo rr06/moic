@@ -1,16 +1,30 @@
 <script>
-  import classify from "./WebClassifier";
-
-  export let manifest;
+  export let manifest
+  let classificationStatus = "ready and waiting"
 
   function training_images_for(c) {
-    return manifest.images.filter((img) => img.c == c).length;
+    return manifest.images.filter((img) => img.c == c).length
   }
 
-  async function doClassification() {
-    console.log("Initiating classification");
-    await classify(manifest, document.getElementById("imgHolder"));
+  function doClassification() {
+    classificationStatus = "Initiating classification"
+    const worker = new Worker('./WebClassifier.js')
+
+    worker.addEventListener("message", e => {
+      switch(e.data.action) {
+        case 'TFINIT':
+          worker.postMessage(
+            {
+              action: "CLASSIFY",
+              manifest: manifest
+            })
+          break
+        default: 
+          classificationStatus = e.data.message
+      }
+    })
   }
+
 </script>
 
 <div class="box">
@@ -35,8 +49,11 @@
       on:click={doClassification}>Classify!</button>
   </div>
   <div class="has-text-centered">
+    <p>{classificationStatus}</p>
+  </div>
+  <div class="has-text-centered">
     <!-- svelte-ignore a11y-img-redundant-alt -->
-    <img
+    <img class="is-hidden"
       id="imgHolder"
       crossorigin
       src="/favicon.png"
